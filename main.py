@@ -107,6 +107,24 @@ def test_predict(model, btcData):
     return prediction_price
 
 
+def calculate_accuracy(btcData, test_predictions):
+    test_start = '2020-01-01'
+    test_data = btcData.iloc[btcData.index >= test_start].copy()
+    actual_price = test_data['close'].values
+
+    if len(actual_price) != len(test_predictions):
+        raise ValueError("Lengths of actual and predicted values must be the same.")
+
+    absolute_errors = [abs(actual - predicted) for actual, predicted in zip(actual_price, test_predictions)]
+    mean_absolute_error = sum(absolute_errors) / len(absolute_errors)
+    mean_actual_value = sum(actual_price) / len(actual_price)
+    percentage_accuracy = (1 - mean_absolute_error / mean_actual_value) * 100
+    accuracy_values = np.array(percentage_accuracy)
+    mean_accuracy = np.mean(accuracy_values)
+
+    return mean_accuracy
+
+
 def make_predictions(model, btcData):
     scaler = MinMaxScaler()
     prediction_days = 60
@@ -131,24 +149,6 @@ def make_predictions(model, btcData):
     prediction = np.reshape(prediction, future_days)
 
     return prediction
-
-
-def calculate_accuracy(btcData, test_predictions):
-    test_start = '2020-01-01'
-    test_data = btcData.iloc[btcData.index >= test_start].copy()
-    actual_price = test_data['close'].values
-
-    if len(actual_price) != len(test_predictions):
-        raise ValueError("Lengths of actual and predicted values must be the same.")
-
-    absolute_errors = [abs(actual - predicted) for actual, predicted in zip(actual_price, test_predictions)]
-    mean_absolute_error = sum(absolute_errors) / len(absolute_errors)
-    mean_actual_value = sum(actual_price) / len(actual_price)
-    percentage_accuracy = (1 - mean_absolute_error / mean_actual_value) * 100
-    accuracy_values = np.array(percentage_accuracy)
-    mean_accuracy = np.mean(accuracy_values)
-
-    return mean_accuracy
 
 
 @app.route('/')
