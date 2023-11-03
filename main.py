@@ -169,13 +169,13 @@ def predict():
 
         test_predictions = test_predict(model, btcData)
 
-        mean_absolute_error_percentage = calculate_accuracy(btcData, test_predictions)
+        accuracy_percentage = calculate_accuracy(btcData, test_predictions)
 
         predictions = make_predictions(model, btcData)
 
         prediction = predictions.tolist()
 
-        return jsonify({'Prediction': str(prediction), 'Accuracy': str(f"{mean_absolute_error_percentage:.2f}%")})
+        return jsonify({'Prediction': str(prediction), 'Accuracy': str(f"{accuracy_percentage:.2f}%")})
     except Exception as e:
         return jsonify({'error': str(e)})
 
