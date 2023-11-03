@@ -1,5 +1,3 @@
-from math import sqrt
-
 from flask import Flask, jsonify
 from flask_cors import CORS
 import datetime as dt
@@ -7,7 +5,6 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
 import pandas as pd
 import requests
 
@@ -124,7 +121,8 @@ def calculate_accuracy(btcData, test_predictions):
     mae_accuracy = (1 - (mean_absolute_error / mean_actual_value_MAE)) * 100
     print('MAE: ', mean_absolute_error)
 
-    root_mean_square_error = np.sqrt(np.mean((actual_price - test_predictions.mean(axis=1)) ** 2))
+    mean_square_error = np.mean((actual_price - test_predictions.mean(axis=1)) ** 2)
+    root_mean_square_error = np.sqrt(mean_square_error)
     mean_actual_value_RMSE = np.mean(actual_price)
     rmse_accuracy = (1 - root_mean_square_error / mean_actual_value_RMSE) * 100
     print('RMSE: ', root_mean_square_error)
